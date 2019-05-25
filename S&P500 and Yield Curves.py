@@ -46,7 +46,7 @@ print('SP500:', len(SP500), 'rates_df:', len(rates_df))
 
 
 #Plot SP500
-fig = plt.figure(figsize=(16, 8))
+'''fig = plt.figure(figsize=(16, 8))
 plt.plot(SP500['Date'], SP500['Adj Close'])
 plt.suptitle('SP500')
 plt.grid()
@@ -61,7 +61,7 @@ plt.plot(rates_df['Date'],rates_df['5 YR'])
 plt.plot(rates_df['Date'],rates_df['3 YR'])
 plt.suptitle('rates_df')
 plt.grid()
-plt.show()
+plt.show()'''
 
 
 #Joining datasets
@@ -70,11 +70,12 @@ together = pd.merge(SP500[['Date', 'Adj Close']],
                     on= ['Date'], how = 'left')
 together = together.fillna(method='ffill')
 together = together.dropna(axis=0)
+together['5yr_3yr_diff'] = together['5 YR']- together['3 YR']
 
 print(together.tail(20))
 
 #PLot SP500 and 3 yr 5yr yields
-fig, ax = plt.subplots(figsize=(16, 8))
+'''fig, ax = plt.subplots(figsize=(16, 8))
 plt.plot(together['Date'],
          together['3 YR'], color = 'r')
 plt.plot(together['Date'],
@@ -91,10 +92,10 @@ plt.plot(together['Date'],
 plt.legend()
 plt.title('Rates VS S&P 500')
 ax2.tick_params('vals', colors='b')
-plt.show()
+plt.show()'''
 
 #Diff. 5 yr - 3 yr vs. SP500
-fig, ax = plt.subplots(figsize=(16, 8))
+'''fig, ax = plt.subplots(figsize=(16, 8))
 
 plt.plot(together['Date'], together['5 YR']- together['3 YR'],
          color = 'r', label= '5 Yr. minus 3 Yr. Rates')
@@ -110,7 +111,7 @@ plt.plot(together['Date'],
 plt.legend()
 plt.title('Rates VS S&P 500')
 ax2.tick_params('vals', colors='b')
-plt.show()
+plt.show()'''
 
 together['3YR_PCT'] = together['3 YR'].pct_change()
 together['5YR_PCT'] = together['5 YR'].pct_change()
@@ -124,7 +125,7 @@ tmp = tmp[tmp['Date'] > cut_off_date]
 tmp['diff'] = tmp['5 YR'] - tmp['3 YR']
 
 # join both datasets together
-fig, ax = plt.subplots(figsize=(16, 8))
+'''fig, ax = plt.subplots(figsize=(16, 8))
 
 plt.plot(tmp['Date'], tmp['diff'].rolling(window=5).mean().values,
          color='r',
@@ -148,7 +149,7 @@ tmp['diff_simple']  = [-100 if val > 0 else 100 for val in tmp['diff_simple'].va
 ax.pcolorfast(ax.get_xlim(), ax.get_ylim(),
               tmp['diff_simple'].values[np.newaxis],
               cmap='Paired', alpha=0.3)
-plt.show()
+plt.show()'''
 
 
 
@@ -181,11 +182,11 @@ UR_Data['Date'] = pd.to_datetime(UR_Data['Date'])
 UR_Data.columns = ['Date', 'UR']
 print(UR_Data.tail())
 
-fig = plt.figure(figsize=(16, 8))
+'''fig = plt.figure(figsize=(16, 8))
 plt.plot(UR_Data['Date'], UR_Data['UR'])
 plt.suptitle('Unemployment Rate')
 plt.grid()
-plt.show()
+plt.show()'''
 
 #Merge Unemployment Data with S&P 500
 
@@ -200,7 +201,7 @@ URandSP500.columns = ['Date', 'Adj_Close', 'UR']
 print(URandSP500.tail())
 
 #PLot SP500 and Unemployment
-fig, ax = plt.subplots(figsize=(16, 8))
+'''fig, ax = plt.subplots(figsize=(16, 8))
 plt.plot(URandSP500['Date'],
          URandSP500['UR'], color = 'r')
 plt.legend()
@@ -219,7 +220,7 @@ plt.show()
 
 Regress = ols('Adj_Close ~ UR', URandSP500).fit()
 
-print(Regress.summary())
+print(Regress.summary())'''
 
 
 #Case-Shiller Data
@@ -230,7 +231,7 @@ CaseShiller_df.columns = ['Date', 'Case-Shiller']
 print(CaseShiller_df.tail())
 
 #Plot Case-Shiller Index
-fig, ax = plt.subplots(figsize=(16,8))
+'''fig, ax = plt.subplots(figsize=(16,8))
 plt.plot(CaseShiller_df['Date'], CaseShiller_df['Case-Shiller'])
 plt.grid()
 plt.show()
@@ -243,18 +244,18 @@ plt.plot(CaseShiller_df['Date'], CaseShiller_df['CS_Pct_Chg'], c = 'green')
 ax.tick_params('vals', colors='r')
 plt.grid()
 plt.axhline(0)
-plt.show()
+plt.show()'''
 
-CSandSP500 = pd.merge(SP500,
+'''CSandSP500 = pd.merge(SP500,
                       CaseShiller_df[['Date', 'Case-Shiller', 'CS_Pct_Chg']],
                       on=['Date'], how='left')
 CSandSP500 = CSandSP500.fillna(method='ffill')
 CSandSP500 = CSandSP500.dropna(axis=0)
 
-print(CSandSP500.tail())
+print(CSandSP500.tail())'''
 
 #Plot S&P500 with Case-Shiller
-fig, ax = plt.subplots(figsize=(16,8))
+'''fig, ax = plt.subplots(figsize=(16,8))
 plt.plot(CSandSP500['Date'], CSandSP500['Case-Shiller'], color = 'r')
 plt.grid()
 plt.axhline(0)
@@ -265,7 +266,6 @@ plt.legend()
 plt.title('S&P 500 and Case-Shiller')
 ax2.tick_params('vals', colors='b')
 plt.show()
-
 
 
 #Plot S&P500 Percent Change VS. Case-Shiller Percent Change
@@ -292,7 +292,7 @@ CSandSP500 = CSandSP500.rename(columns = {'Adj Close': 'Adj_Close'})
 CSandSP500 = CSandSP500.rename(columns = {'Case-Shiller': 'Case_Shiller'})
 
 Regress2 = ols('Adj_Close ~ Case_Shiller', CSandSP500).fit()
-print(Regress2.summary())
+print(Regress2.summary())'''
 
 
 #VIX vs. S&P 500
@@ -302,7 +302,7 @@ VIX = pd.read_csv('VIX.csv')
 VIX['Date'] = pd.to_datetime(VIX['Date'])
 
 print(VIX.tail())
-fig, ax = plt.subplots(figsize=(16,8))
+'''fig, ax = plt.subplots(figsize=(16,8))
 plt.plot(VIX['Date'], VIX['Adj Close'], color = 'b')
 plt.grid()
 ax.tick_params('vals', colors = 'r')
@@ -311,7 +311,7 @@ plt.plot(SP500['Date'], SP500['Adj Close'], label= 'S&P 500')
 plt.legend()
 plt.title('S&P 500 vs. VIX')
 ax2.tick_params('vals', colors='b')
-plt.show()
+plt.show()'''
 
 
 VIX = VIX.rename(columns = {'Adj Close' : 'VIX_Adj_Close'})
@@ -329,8 +329,56 @@ VIXandSP500 = VIXandSP500.dropna(axis=0)
 Regress3 = ols('SP_Adj_Close ~ VIX_Adj_Close', VIXandSP500).fit()
 print(Regress3.summary())
 
+#Creating Full Data Frame
+
+full_df = pd.merge(URandSP500[['Date', 'Adj_Close', 'UR']],
+                   VIX[['Date', 'VIX_Adj_Close']],
+                   on = ['Date'], how = 'left')
+full_df = full_df.fillna(method='ffill')
+full_df = full_df.dropna(axis=0)
+
+full_df = pd.merge(full_df[['Date', 'Adj_Close', 'UR', 'VIX_Adj_Close']],
+                   CaseShiller_df[['Date', 'Case-Shiller']],
+                   on = ['Date'], how = 'left')
+full_df = full_df.fillna(method='ffill')
+full_df = full_df.dropna(axis=0)
+
+full_df = pd.merge(full_df[['Date', 'Adj_Close', 'UR', 'VIX_Adj_Close', 'Case-Shiller']],
+                   together[['Date', '5yr_3yr_diff']],
+                   on= ['Date'], how = 'left')
+
+full_df = full_df.rename(columns = {'Case-Shiller': 'Case_Shiller'})
+full_df = full_df.rename(columns = {'5yr_3yr_diff': 'Treas_Yield_Diff'})
+
+print(full_df.head())
 
 
+
+Regress4 = ols('Adj_Close ~ UR + VIX_Adj_Close + Case_Shiller + Treas_Yield_Diff', full_df).fit()
+print(Regress4.summary())
+
+
+corr = full_df.corr()
+
+print(corr.to_string())
+
+Regress5 = ols('Adj_Close ~ UR + VIX_Adj_Close + Case_Shiller', full_df).fit()
+print(Regress5.summary())
+
+Regress6 = ols('Adj_Close ~ VIX_Adj_Close + Case_Shiller + Treas_Yield_Diff', full_df).fit()
+print(Regress6.summary())
+
+Regress7 = ols('Adj_Close ~ UR', full_df).fit()
+print(Regress7.summary())
+
+#Regress8 = ols('Adj_Close ~ VIX_Adj_Close', full_df).fit()
+#print(Regress8.summary())
+
+#Regress9 = ols('Adj_Close ~ Case_Shiller', full_df).fit()
+#print(Regress9.summary())
+
+#Regress10 = ols('Adj_Close ~ Treas_Yield_Diff', full_df).fit()
+#print(Regress10.summary())
 
 
 
